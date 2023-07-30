@@ -1,9 +1,9 @@
-package id.haaweejee.moviedbandroid.data.remote.dto.response
+package id.haaweejee.moviedbandroid.data.remote.dto.response.movielist
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Result(
+data class MovieResponse(
     val adult: Boolean,
     val backdrop_path: String,
     val genre_ids: List<Int>,

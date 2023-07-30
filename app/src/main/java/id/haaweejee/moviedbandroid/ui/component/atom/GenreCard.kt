@@ -1,4 +1,4 @@
-package id.haaweejee.moviedbandroid.ui.compose
+package id.haaweejee.moviedbandroid.ui.component.atom
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -9,15 +9,16 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import id.haaweejee.moviedbandroid.data.remote.dto.response.Genre
-import id.haaweejee.moviedbandroid.ui.theme.Purple40
+import id.haaweejee.moviedbandroid.domain.entities.GenreEntities
+import id.haaweejee.moviedbandroid.ui.theme.Blumine
+import id.haaweejee.moviedbandroid.ui.theme.FrostedMint
 
 @Composable
-fun CardGenre(
-    genre: Genre,
+fun GenreCard(
+    genre: GenreEntities,
     modifier: Modifier = Modifier,
 ) {
     Card(
@@ -26,7 +27,7 @@ fun CardGenre(
             defaultElevation = 2.dp,
         ),
         colors = CardDefaults.cardColors(
-            containerColor = Purple40,
+            containerColor = Blumine,
         ),
         modifier = modifier
             .padding(4.dp),
@@ -38,8 +39,9 @@ fun CardGenre(
         ) {
             Text(
                 text = genre.name,
-                color = Color.White,
+                color = FrostedMint,
                 fontSize = 16.sp,
+                fontWeight = FontWeight.Bold,
             )
         }
     }
