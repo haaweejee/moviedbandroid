@@ -1,30 +1,17 @@
 package id.haaweejee.moviedbandroid.data.remote.service
 
-import id.haaweejee.moviedbandroid.data.remote.dto.response.GenreResponse
-import id.haaweejee.moviedbandroid.data.remote.dto.response.MovieResponse
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.android.Android
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.features.logging.LogLevel
-import io.ktor.client.features.logging.Logging
+import id.haaweejee.moviedbandroid.data.remote.dto.response.detail.DetailMovieResponse
+import id.haaweejee.moviedbandroid.data.remote.dto.response.genre.GenresResponse
+import id.haaweejee.moviedbandroid.data.remote.dto.response.movielist.MoviesResponse
+import id.haaweejee.moviedbandroid.data.remote.dto.response.review.ReviewsResponse
+import id.haaweejee.moviedbandroid.data.remote.dto.response.video.VideoResponse
 
 interface MovieDbNetwork {
 
-    suspend fun getGenres(): GenreResponse
-
-    suspend fun getMoviesDiscover(): MovieResponse
-
-    companion object {
-        fun create(): MovieDbNetwork = MovieDbNetworkImpl(
-            service = HttpClient(Android) {
-                install(Logging) {
-                    level = LogLevel.ALL
-                }
-                install(JsonFeature) {
-                    serializer = KotlinxSerializer()
-                }
-            },
-        )
-    }
+    suspend fun getGenres(): GenresResponse
+    suspend fun getMoviesDiscover(genreId: String? = "", page: Int): MoviesResponse
+    suspend fun getMovieDetail(movieId: String): DetailMovieResponse
+    suspend fun getMovieReview(movieId: String): ReviewsResponse
+    suspend fun getMovieReviewPagination(movieId: String, page: Int): ReviewsResponse
+    suspend fun getMovieVideo(movieId: String): VideoResponse
 }
