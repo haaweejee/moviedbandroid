@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import id.haaweejee.moviedbandroid.R
-import id.haaweejee.moviedbandroid.domain.entities.MovieDiscoverEntities
+import id.haaweejee.moviedbandroid.domain.entities.MovieEntities
 import id.haaweejee.moviedbandroid.ui.component.atom.Rating
 import id.haaweejee.moviedbandroid.ui.theme.Blumine
 import id.haaweejee.moviedbandroid.ui.theme.FrostedMint
@@ -29,7 +29,7 @@ import id.haaweejee.moviedbandroid.ui.util.localeDateDayParseHalfMonthSecond
 
 @Composable
 fun MovieCard(
-    data: MovieDiscoverEntities,
+    data: MovieEntities,
     modifier: Modifier = Modifier,
 ) {
     Card(

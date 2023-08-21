@@ -1,5 +1,3 @@
-@file:OptIn(ExperimentalLayoutApi::class)
-
 package id.haaweejee.moviedbandroid.ui.component.molecules
 
 import androidx.compose.foundation.clickable
@@ -33,6 +31,7 @@ import id.haaweejee.moviedbandroid.ui.theme.FrostedMint
 import id.haaweejee.moviedbandroid.ui.theme.MidNight
 import id.haaweejee.moviedbandroid.ui.theme.latoFontFamily
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun ExpandableGenreCard(
     genres: List<GenreEntities> = emptyList(),
