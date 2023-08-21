@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.sp
 import id.haaweejee.moviedbandroid.ui.theme.FrostedMint
 import id.haaweejee.moviedbandroid.ui.theme.WestSide
 import id.haaweejee.moviedbandroid.ui.theme.latoFontFamily
+import id.haaweejee.moviedbandroid.ui.util.simplifyNumber
 
 @Composable
 fun Rating(
@@ -42,7 +43,7 @@ fun Rating(
         )
         Spacer(modifier = modifier.width(4.dp))
         Text(
-            text = voteAverage.toString(),
+            text = voteAverage.simplifyNumber().toString(),
             fontFamily = latoFontFamily,
             fontWeight = FontWeight.SemiBold,
             fontSize = 14.sp,

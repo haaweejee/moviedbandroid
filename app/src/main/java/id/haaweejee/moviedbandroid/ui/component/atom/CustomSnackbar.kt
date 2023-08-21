@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CustomSnackbar(
     snackbarHostState: SnackbarHostState,
-    message: String
+    message: String,
 ) {
     val coroutineScope = rememberCoroutineScope()
 
