@@ -13,8 +13,10 @@ class GetDetailMovieHeaderUseCase @Inject constructor(
     operator fun invoke(movieId: String): Flow<DetailMovieHeaderEntities> =
         repository.getMovieDetail(movieId).map {
             DetailMovieHeaderEntities(
+                idMovie = it.id ?: 0,
                 titleMovie = it.title.orEmpty(),
                 posterMovie = imageUrl + it.poster_path,
+                backdropMovie = imageUrl + it.backdrop_path,
                 releaseDateMovie = it.release_date.orEmpty(),
                 ratingMovie = it.vote_average ?: 0.0,
                 overviewMovie = it.overview.orEmpty(),

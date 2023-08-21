@@ -10,12 +10,27 @@ class GetDetailContentUseCase @Inject constructor(
     private val getDetailMovieHeaderUseCase: GetDetailMovieHeaderUseCase,
     private val getDetailMovieReviewUseCase: GetDetailMovieReviewUseCase,
     private val getDetailMovieTrailerUseCase: GetDetailMovieTrailerUseCase,
+    private val getMovieBookmarkedByIdUseCase: GetMovieBookmarkedByIdUseCase,
+    private val getMovieRecommendationUseCase: GetMoviesRecommendationUseCase,
+    private val getAccountStateUseCase: GetAccountStateUseCase,
 ) {
 
     operator fun invoke(movieId: String): Flow<DetailMovieContentEntities> = flow {
         val header = getDetailMovieHeaderUseCase(movieId).first()
         val review = getDetailMovieReviewUseCase(movieId).first()
         val trailer = getDetailMovieTrailerUseCase(movieId).first()
-        emit(DetailMovieContentEntities(header, trailer, review))
+        val bookmarked = getMovieBookmarkedByIdUseCase(movieId.toInt()).first()
+        val recommendation = getMovieRecommendationUseCase(movieId).first()
+        val accountState = getAccountStateUseCase(movieId).first()
+        emit(
+            DetailMovieContentEntities(
+                header,
+                trailer,
+                review,
+                bookmarked == true,
+                recommendation,
+                accountState,
+            ),
+        )
     }
 }
