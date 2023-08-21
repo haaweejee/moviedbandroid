@@ -3,8 +3,10 @@ package id.haaweejee.moviedbandroid.ui.screen
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.paging.compose.collectAsLazyPagingItems
 import id.haaweejee.moviedbandroid.R
 import id.haaweejee.moviedbandroid.ui.common.UiState
@@ -14,6 +16,7 @@ import id.haaweejee.moviedbandroid.ui.component.organism.home.HomeMoviesContent
 import id.haaweejee.moviedbandroid.ui.component.organism.home.HomeMoviesHeader
 import id.haaweejee.moviedbandroid.ui.util.ConnectionState
 import id.haaweejee.moviedbandroid.ui.viewmodel.HomeViewModel
+import timber.log.Timber
 
 @Composable
 fun HomeScreen(
@@ -24,13 +27,19 @@ fun HomeScreen(
 ) {
     val viewModel = hiltViewModel<HomeViewModel>()
 
-    val movies = viewModel.getDiscoverMovies().collectAsLazyPagingItems()
+    LaunchedEffect(Unit) {
+        viewModel.getGenres()
+        viewModel.getDiscoverMovies()
+    }
+
+    val genres by viewModel.genreState.collectAsStateWithLifecycle()
+    val movies = viewModel.moviesState.collectAsLazyPagingItems()
 
     Column {
         if (networkConnectivity == ConnectionState.Available) {
-            viewModel.genreState.collectAsState(initial = UiState.Loading).value.let { uiState ->
+            genres.let { uiState ->
                 when (uiState) {
-                    is UiState.Loading -> viewModel.getGenres()
+                    is UiState.Loading -> Timber.d("Loading")
                     is UiState.Success -> {
                         HomeMoviesHeader(
                             title = "Welcome to MovieDbApp",

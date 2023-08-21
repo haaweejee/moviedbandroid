@@ -2,21 +2,23 @@ package id.haaweejee.moviedbandroid.ui.screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import id.haaweejee.moviedbandroid.R
+import id.haaweejee.moviedbandroid.domain.entities.MovieEntities
 import id.haaweejee.moviedbandroid.ui.common.UiState
 import id.haaweejee.moviedbandroid.ui.component.atom.CustomSnackbar
 import id.haaweejee.moviedbandroid.ui.component.molecules.CustomLoading
 import id.haaweejee.moviedbandroid.ui.component.molecules.ErrorAnimation
 import id.haaweejee.moviedbandroid.ui.component.organism.detail.DetailMovieHeader
+import id.haaweejee.moviedbandroid.ui.component.organism.detail.DetailMovieRecommendationContent
 import id.haaweejee.moviedbandroid.ui.component.organism.detail.DetailMovieReviewContent
 import id.haaweejee.moviedbandroid.ui.component.organism.detail.DetailMovieTrailerContent
 import id.haaweejee.moviedbandroid.ui.util.ConnectionState
@@ -29,18 +31,35 @@ fun DetailMovieScreen(
     modifier: Modifier = Modifier,
     networkConnectivity: ConnectionState,
     snackbarHostState: SnackbarHostState,
+    navigateToDetail: (Int) -> Unit
 ) {
     val viewModel = hiltViewModel<DetailMovieViewModel>()
+    val detail by viewModel.detailMovieContentState.collectAsState()
+    val bookmarked = viewModel.bookmarkMovieState.collectAsState().value
 
     Column(
         modifier = modifier
-            .padding(12.dp)
-            .fillMaxWidth()
-            .fillMaxSize(),
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
     ) {
         if (networkConnectivity == ConnectionState.Available) {
-            viewModel.detailMovieContentState.collectAsState(initial = UiState.Loading).value.let {
-                    uiState ->
+            bookmarked.let {
+                if (it is UiState.Success) {
+                    if (it.data.bookmarkStatus) {
+                        CustomSnackbar(
+                            message = it.data.message,
+                            snackbarHostState = snackbarHostState,
+                        )
+                    } else {
+                        CustomSnackbar(
+                            message = it.data.message,
+                            snackbarHostState = snackbarHostState,
+                        )
+                    }
+                }
+            }
+
+            detail.let { uiState ->
                 when (uiState) {
                     is UiState.Loading -> {
                         CustomLoading(modifier = modifier.fillMaxSize())
@@ -50,6 +69,20 @@ fun DetailMovieScreen(
                         DetailMovieHeader(
                             navController = navController,
                             header = uiState.data.header,
+                            isBookmark = uiState.data.bookmark,
+                            isRated = uiState.data.accountState.rated,
+                            onBookmarkClicked = {
+                                viewModel.insertMovieToBookmark(
+                                    MovieEntities(
+                                        idMovie = movieId,
+                                        titleMovie = uiState.data.header.titleMovie,
+                                        posterMovie = uiState.data.header.posterMovie,
+                                        releaseDateMovie = uiState.data.header.releaseDateMovie,
+                                        ratingMovie = uiState.data.header.ratingMovie,
+                                        isBookmarked = true,
+                                    ),
+                                )
+                            }
                         )
                         DetailMovieTrailerContent(trailer = uiState.data.trailer)
                         if (uiState.data.review.isNotEmpty()) {
@@ -57,6 +90,12 @@ fun DetailMovieScreen(
                                 movieId = movieId.toString(),
                                 review = uiState.data.review,
                                 snackbarHostState = snackbarHostState,
+                            )
+                        }
+                        if (uiState.data.recommendation.isNotEmpty()) {
+                            DetailMovieRecommendationContent(
+                                lists = uiState.data.recommendation,
+                                navigateToDetail = navigateToDetail
                             )
                         }
                     }
