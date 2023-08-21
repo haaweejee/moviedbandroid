@@ -12,7 +12,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.items
-import id.haaweejee.moviedbandroid.domain.entities.MovieDiscoverEntities
+import id.haaweejee.moviedbandroid.domain.entities.MovieEntities
 import id.haaweejee.moviedbandroid.ui.component.molecules.MovieCard
 import id.haaweejee.moviedbandroid.ui.component.atom.CustomSnackbar
 import id.haaweejee.moviedbandroid.ui.component.molecules.CustomLoading
@@ -21,7 +21,7 @@ import id.haaweejee.moviedbandroid.ui.component.molecules.PaginationLoading
 @Composable
 fun GenreMoviesContent(
     modifier: Modifier = Modifier,
-    movies: LazyPagingItems<MovieDiscoverEntities>,
+    movies: LazyPagingItems<MovieEntities>,
     navigateToDetail: (Int) -> Unit,
     snackbarHostState: SnackbarHostState,
 ) {

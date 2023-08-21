@@ -1,8 +1,11 @@
 package id.haaweejee.moviedbandroid.ui.component.organism.detail
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -64,15 +67,13 @@ fun DetailMovieReviewContent(
             showSheet = true
         }
     }
-    LazyColumn(
+    Column(
         modifier = modifier
             .padding(
                 horizontal = 12.dp,
             ),
     ) {
-        items(
-            review,
-        ) {
+        review.map {
             ReviewCard(review = it)
         }
     }

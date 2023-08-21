@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -30,6 +31,7 @@ import androidx.paging.compose.items
 import id.haaweejee.moviedbandroid.ui.component.atom.CustomSnackbar
 import id.haaweejee.moviedbandroid.ui.component.molecules.ReviewCard
 import id.haaweejee.moviedbandroid.ui.theme.FrostedMint
+import id.haaweejee.moviedbandroid.ui.theme.MidNight
 import id.haaweejee.moviedbandroid.ui.theme.latoFontFamily
 import id.haaweejee.moviedbandroid.ui.viewmodel.AllReviewViewModel
 
@@ -38,7 +40,7 @@ fun AllReviewBottomSheet(
     onDismiss: () -> Unit,
     movieId: String,
     modifier: Modifier = Modifier,
-    snackbarHostState: SnackbarHostState
+    snackbarHostState: SnackbarHostState,
 ) {
     val viewModel = hiltViewModel<AllReviewViewModel>()
     val modalBottomSheetState = rememberModalBottomSheetState()
@@ -49,6 +51,8 @@ fun AllReviewBottomSheet(
         onDismissRequest = { onDismiss() },
         sheetState = modalBottomSheetState,
         dragHandle = { BottomSheetDefaults.DragHandle() },
+        containerColor = MidNight,
+        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp),
     ) {
         Column(
             modifier.padding(
