@@ -13,3 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+.idea/deploymentTargetDropDown.xml
+.idea/gradle.xml
+.idea/inspectionProfiles/Project_Default.xml
+.idea/misc.xml
+app/release/app-release.aab
