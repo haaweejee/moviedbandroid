@@ -21,7 +21,7 @@ class MoviePagingSource(
             val response = service.getMoviesDiscover(genreId, page)
 
             LoadResult.Page(
-                data = response.results.orEmpty(),
+                data = response.results,
                 prevKey = if (page == 1) null else page.minus(1),
                 nextKey = if (response.results.isEmpty()) null else page + 1,
             )
