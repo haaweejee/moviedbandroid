@@ -3,11 +3,10 @@ package id.haaweejee.moviedbandroid.ui.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import id.haaweejee.moviedbandroid.data.remote.dto.response.detail.DetailMovieResponse
-import id.haaweejee.moviedbandroid.data.remote.dto.response.review.ReviewsResponse
-import id.haaweejee.moviedbandroid.data.remote.dto.response.video.VideoResponse
-import id.haaweejee.moviedbandroid.data.repository.MovieDbRepositoryImpl
+import id.haaweejee.moviedbandroid.domain.entities.BookmarkEntities
 import id.haaweejee.moviedbandroid.domain.entities.DetailMovieContentEntities
+import id.haaweejee.moviedbandroid.domain.entities.MovieEntities
+import id.haaweejee.moviedbandroid.domain.usecase.BookmarkMovieUseCase
 import id.haaweejee.moviedbandroid.domain.usecase.GetDetailContentUseCase
 import id.haaweejee.moviedbandroid.ui.common.UiState
 import kotlinx.coroutines.Dispatchers
@@ -19,26 +18,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailMovieViewModel @Inject constructor(
-    private val repository: MovieDbRepositoryImpl,
     private val getDetailContentUseCase: GetDetailContentUseCase,
+    private val bookmarkMovieUseCase: BookmarkMovieUseCase,
 ) : ViewModel() {
-
-    private val _detailMovieState: MutableStateFlow<UiState<DetailMovieResponse>> = MutableStateFlow(UiState.Loading)
-    val detailMovieState: StateFlow<UiState<DetailMovieResponse>> get() = _detailMovieState
-
-    private val _reviewMovieState: MutableStateFlow<UiState<ReviewsResponse>> = MutableStateFlow(UiState.Loading)
-    val reviewMovieState: StateFlow<UiState<ReviewsResponse>> get() = _reviewMovieState
-
-    private val _videoMovieState: MutableStateFlow<UiState<VideoResponse>> = MutableStateFlow(UiState.Loading)
-    val videoMovieState: StateFlow<UiState<VideoResponse>> get() = _videoMovieState
 
     private val _detailMovieContentState: MutableStateFlow<UiState<DetailMovieContentEntities>> =
         MutableStateFlow(UiState.Loading)
-    val detailMovieContentState: StateFlow<UiState<DetailMovieContentEntities>> get() =
-        _detailMovieContentState
+    val detailMovieContentState: StateFlow<UiState<DetailMovieContentEntities>>
+        get() =
+            _detailMovieContentState
+
+    private val _bookmarkMovieState: MutableStateFlow<UiState<BookmarkEntities>> = MutableStateFlow(UiState.Loading)
+    val bookmarkMovieState: StateFlow<UiState<BookmarkEntities>>
+        get() =
+            _bookmarkMovieState
 
     fun getDetailMovie(movieId: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             getDetailContentUseCase(movieId).catch {
                 _detailMovieContentState.value = UiState.Error(it.message.toString())
             }.collect {
@@ -47,23 +43,12 @@ class DetailMovieViewModel @Inject constructor(
         }
     }
 
-    fun getDetailMovieReviews(genreId: String) {
+    fun insertMovieToBookmark(movie: MovieEntities) =
         viewModelScope.launch(Dispatchers.IO) {
-            repository.getMovieReview(genreId).catch {
-                _reviewMovieState.value = UiState.Error(it.message.toString())
+            bookmarkMovieUseCase(movie).catch {
+                _bookmarkMovieState.value = UiState.Error(it.message.toString())
             }.collect {
-                _reviewMovieState.value = UiState.Success(it)
+                _bookmarkMovieState.value = UiState.Success(it)
             }
         }
-    }
-
-    fun getDetailMovieVideo(genreId: String) {
-        viewModelScope.launch(Dispatchers.IO) {
-            repository.getMovieVideo(genreId).catch {
-                _videoMovieState.value = UiState.Error(it.message.toString())
-            }.collect {
-                _videoMovieState.value = UiState.Success(it)
-            }
-        }
-    }
 }
