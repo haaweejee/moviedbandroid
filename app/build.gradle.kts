@@ -2,8 +2,12 @@ import java.io.FileInputStream
 import java.util.Properties
 
 val apikeyPropertiesFile = rootProject.file("apikey.properties")
+val versionPropertiesFile = rootProject.file("version.properties")
 val apikeyProperties = Properties().apply {
     load(FileInputStream(apikeyPropertiesFile))
+}
+val versionProperties = Properties().apply {
+    load(FileInputStream(versionPropertiesFile))
 }
 
 plugins {
@@ -22,8 +26,8 @@ android {
         applicationId = "id.haaweejee.moviedbandroid"
         minSdk = 24
         targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = versionProperties.getProperty("VERSION_CODE").toInt()
+        versionName = versionProperties.getProperty("VERSION_NAME")
         buildConfigField("String", "ACCESS_TOKEN", apikeyProperties.getProperty("ACCESS_TOKEN"))
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -77,10 +81,15 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:1.4.3")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+    implementation("androidx.constraintlayout:constraintlayout-compose:1.0.1")
     implementation("androidx.navigation:navigation-compose:2.6.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
 
     // Ktor
-    implementation("io.ktor:ktor-client-core:2.0.0")
+    implementation("io.ktor:ktor-client-core:2.2.3")
     implementation("io.ktor:ktor-client-android:2.0.0")
     implementation("io.ktor:ktor-serialization-kotlinx-json:2.0.0")
     implementation("io.ktor:ktor-client-logging:2.0.0")
@@ -119,4 +128,15 @@ dependencies {
 
     // Timber
     implementation("com.jakewharton.timber:timber:5.0.1")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2")
+
+    // Room
+    implementation("androidx.room:room-runtime:2.5.2")
+    kapt("androidx.room:room-compiler:2.5.2")
+    // Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:2.5.2")
+
+    // exoplayer
+    implementation("com.google.android.exoplayer:exoplayer:2.18.0")
 }
